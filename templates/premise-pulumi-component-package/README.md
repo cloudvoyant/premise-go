@@ -2,9 +2,32 @@
 
 Each project is its own Go module. Choose a canonical module path under your repository and a publication policy. `private-local` modules stay in the workspace; `public` modules receive directory-prefixed tags at the shared workspace version.
 
-Run `mise run install`, `mise run test`, and `mise run build`. The workspace's `go.work` resolves local modules. External consumers run `go get example.com/premise-module@v1.2.3`. Verify public modules with `GOWORK=off go test ./...` before release. Do not publish filesystem replace directives.
+This optional template is a component provider with an executable and generated SDKs.
+The root Go package builds the provider executable.
+Go consumers import `example.com/premise-module/sdk/go/greeting`, the generated SDK package within the same module.
 
-This optional template is a component **provider**. Its root executable is not an importable Go library; Go consumers import `example.com/premise-module/sdk/go/greeting`. Run `mise run generate` to build the provider, extract its real schema, and regenerate pinned Go and Node SDKs. Run `mise run test:sdk` for a local Node SDK consumer using Pulumi mocks. `go test ./...` also checks the generated Go SDK consumer. Neither demonstration deploys cloud resources.
+In the provider project, install dependencies, run tests, and build the executable:
+
+```sh
+mise run install
+mise run test
+mise run build
+```
+
+In a separate Go Pulumi project, fetch the published SDK package:
+
+```sh
+go get example.com/premise-module/sdk/go/greeting@v1.2.3
+```
+
+The workspace's `go.work` resolves local modules during development.
+Verify public modules with `GOWORK=off go test ./...` before release.
+Do not publish filesystem replace directives.
+
+Run `mise run generate` to build the provider, extract its schema, and regenerate pinned Go and Node SDKs.
+Run `mise run test:sdk` for a local Node SDK consumer with Pulumi mocks.
+The Go tests also check the generated Go SDK consumer.
+Neither demonstration deploys cloud resources.
 
 The provider uses development version `0.1.0`, replaced through `-X main.version=<shared-version>` when building a release, and fixed token (`premise-pulumi-component-package:index:Greeting`). Before distributing binary plugins or Node packages, configure your own namespace, plugin download URL, SDK package name, package feeds, and release automation. The Go SDK can use the workspace's coordinated module tags; npm/plugin distribution remains an explicit separate packaging step. This exploratory template can be removed before merge without changing the native Go component library.
 

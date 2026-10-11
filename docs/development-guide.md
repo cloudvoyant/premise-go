@@ -4,6 +4,20 @@ Every directory under templates is a standalone Go module. Registry validation c
 
 The root mise.toml declares a monorepo and discovers task configurations under templates/premise-*, apps/*, and libs/*. Run `mise tasks --all` to list their tasks. Each template owns its tools and tasks; the registry root mise.toml is not copied into generated clients.
 
+Source templates share the placeholder module path `example.com/premise-module`.
+The registry therefore has no root `go.work`.
+Each source template runs as a standalone Go module.
+Generated projects receive distinct module paths and join the client's `go.work`.
+
+Run one source template's tests from the registry root:
+
+```sh
+mise run //templates/premise-cobra-cli:test
+```
+
+Run `mise run test` to check every template in isolated generated copies.
+That task also checks renamed modules together in a temporary Go workspace.
+
 Connect code is checked in. Run `mise run generate` in that template to regenerate with pinned local protobuf and Connect plugins. Repeat generation and compare gen/ to verify reproducibility.
 
 The native Pulumi template uses Pulumi mock tests and a Go consumer under examples/consumer. It does not need Pulumi CLI or cloud providers. The optional provider template additionally uses the Pulumi CLI to generate SDKs and demonstrates Node consumption with mocks. Its SDK packaging is independent of native Go module release tags.
