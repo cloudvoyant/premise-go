@@ -1,0 +1,5 @@
+[tools]
+go = "1.25.14"
+
+[tasks.test]
+run = "python3 scripts/validate.py && python3 scripts/validate-workspace.py"

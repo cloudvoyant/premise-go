@@ -1,0 +1,76 @@
+[tools]
+go = "1.25.14"
+pulumi = "3.200.0"
+node = "22.22.0"
+
+[tasks."install"]
+run = '''
+set -eu
+go mod download
+'''
+
+[tasks."build"]
+run = '''
+set -eu
+mkdir -p dist && go build -o dist/pulumi-resource-premise-pulumi-component-package .
+'''
+
+[tasks."clean"]
+run = '''
+set -eu
+rm -rf dist
+'''
+
+[tasks."test"]
+run = '''
+set -eu
+go test ./...
+'''
+
+[tasks."lint"]
+run = '''
+set -eu
+go vet ./...
+'''
+
+[tasks."lint:fix"]
+run = '''
+set -eu
+go fmt ./... && go vet ./...
+'''
+
+[tasks."format"]
+run = '''
+set -eu
+gofmt -w $(find . -name '*.go' -not -path './sdk/*')
+'''
+
+[tasks."format:check"]
+run = '''
+set -eu
+test -z "$(gofmt -l $(find . -name '*.go' -not -path './sdk/*'))"
+'''
+
+[tasks."env-pull"]
+run = '''
+set -eu
+echo "No external environment configuration"
+'''
+
+[tasks."publish"]
+run = '''
+set -eu
+go test ./... && echo "Module tags are published by the coordinated premise release"
+'''
+
+[tasks."publish:rc"]
+run = '''
+set -eu
+go test ./... && echo "RC module tags are published by the coordinated premise release"
+'''
+
+[tasks.generate]
+run = "sh scripts/generate.sh"
+
+[tasks."test:sdk"]
+run = "cd sdk/nodejs && npm ci --ignore-scripts --no-audit --no-fund && npm run build && node ../../examples/node-consumer.cjs"

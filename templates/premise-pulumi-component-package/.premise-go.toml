@@ -1,0 +1,3 @@
+publication = "premise-publication"
+main = "."
+binary = "pulumi-resource-premise-pulumi-component-package"

@@ -1,0 +1,70 @@
+workspace:
+  name: premise-go
+  kind: template-registry
+  schema-version: '0.2'
+  package_managers: [go]
+  providers: {ci: github, tools: mise, tasks: mise, infra: none, versioning: svu}
+  projects: []
+template_registry:
+  workspace_files: [.gitignore]
+  templates:
+    - name: premise-cobra-cli
+      kind: app
+      path: templates/premise-cobra-cli
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+      substitutions:
+        premise-cobra-cli: name
+        example.com/premise-module: module
+    - name: premise-connect-grpc-service
+      kind: app
+      path: templates/premise-connect-grpc-service
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+      substitutions:
+        premise-connect-grpc-service: name
+        example.com/premise-module: module
+    - name: premise-htmx-app
+      kind: app
+      path: templates/premise-htmx-app
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+      substitutions:
+        premise-htmx-app: name
+        example.com/premise-module: module
+    - name: premise-go-lib
+      kind: lib
+      path: templates/premise-go-lib
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+        - {prompt: 'Publication policy:', type: select, populate: publication, choices: [public, private-local]}
+      substitutions:
+        premise-go-lib: name
+        example.com/premise-module: module
+        premise-publication: publication
+    - name: premise-pulumi-component-lib
+      kind: lib
+      path: templates/premise-pulumi-component-lib
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+        - {prompt: 'Publication policy:', type: select, populate: publication, choices: [public, private-local]}
+      substitutions:
+        premise-pulumi-component-lib: name
+        example.com/premise-module: module
+        premise-publication: publication
+    - name: premise-pulumi-component-package
+      kind: lib
+      path: templates/premise-pulumi-component-package
+      questions:
+        - {prompt: 'Project name:', type: string, populate: name}
+        - {prompt: 'Canonical module path:', type: string, populate: module}
+        - {prompt: 'Publication policy:', type: select, populate: publication, choices: [public, private-local]}
+      substitutions:
+        premise-pulumi-component-package: name
+        example.com/premise-module: module
+        premise-publication: publication
