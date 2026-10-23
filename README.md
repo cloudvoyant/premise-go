@@ -1,7 +1,9 @@
 # premise-go
 
-Go templates for premise: Cobra CLI, Connect/gRPC service, HTMX app, separately consumable Go libraries, native Go Pulumi components, and an optional cross-language Pulumi component provider.
+Go templates for Premise: Cobra CLI, Connect/gRPC service, HTMX app, Go libraries, native Go Pulumi components, and an optional cross-language Pulumi provider.
 
-Generate with `pm generate cloudvoyant/premise-go:premise-go-lib` (or another selector in premise.yaml). During tandem development use an explicit local registry source. Projects use separate modules and one root go.work; public modules share the workspace release version through prefixed Git tags. No cloud deployment is required.
+Generated projects keep the standard apps/<name> and libs/<name> layout with per-project Mise tasks. They share one root go.mod, go.sum, dependency set, and repository release tag. There is no go.work or per-library module tag. External clients can import an individual library package at the shared module version.
 
-Run `mise run test` to validate template modules. The cross-language template adds provider packaging and SDK generation and can be removed independently of native components.
+Generate with `pm generate cloudvoyant/premise-go:premise-go-lib`, or another selector in premise.yaml. Supply the same workspace Go module path for every project. During tandem development, use an explicit local registry source with the matching Premise branch.
+
+Run `mise run test` to validate every template contract and all generated projects together in one root module. API policy controls project publication tasks, not which source files the root module distributes. The optional cross-language template can be removed independently.

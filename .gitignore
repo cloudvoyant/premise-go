@@ -3,4 +3,4 @@ dist/
 node_modules/
 __pycache__/
 .tools/
-templates/premise-pulumi-component-package/sdk/nodejs/bin/
+bin/

@@ -4,9 +4,9 @@ plugins:
     out: gen
     opt:
       - paths=source_relative
-      - Mgreet/v1/greet.proto=example.com/premise-module/gen/greet/v1
+      - Mgreet/v1/greet.proto=example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1
   - local: protoc-gen-connect-go
     out: gen
     opt:
       - paths=source_relative
-      - Mgreet/v1/greet.proto=example.com/premise-module/gen/greet/v1
+      - Mgreet/v1/greet.proto=example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1

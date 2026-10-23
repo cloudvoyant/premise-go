@@ -1,7 +1,7 @@
 package greeting_test
 
 import (
-	greeting "example.com/premise-module"
+	greeting "example.com/premise-module/libs/premise-go-lib"
 	"fmt"
 )
 

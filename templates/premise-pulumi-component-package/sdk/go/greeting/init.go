@@ -6,7 +6,7 @@ package greeting
 import (
 	"fmt"
 
-	"example.com/premise-module/sdk/go/greeting/internal"
+	"example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting/internal"
 	"github.com/blang/semver"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 )

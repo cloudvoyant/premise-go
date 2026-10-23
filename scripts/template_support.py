@@ -22,5 +22,6 @@ def copy_template(source: Path, destination: Path, module: str, publication: str
         except UnicodeDecodeError:
             continue
         text = text.replace(MODULE_PLACEHOLDER, module)
+        text = text.replace(source.name, destination.name)
         text = text.replace(PUBLICATION_PLACEHOLDER, publication)
         file.write_text(text)

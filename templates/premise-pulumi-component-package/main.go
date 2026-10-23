@@ -36,7 +36,7 @@ func NewGreeting(ctx *pulumi.Context, name string, args GreetingArgs, opts ...pu
 
 // Private helpers ------------------------------------------------------------
 func provider() (p.Provider, error) {
-	return infer.NewProviderBuilder().WithNamespace("premise").WithDisplayName("greeting").WithGoImportPath("example.com/premise-module/sdk/go/greeting").WithComponents(infer.ComponentF(NewGreeting)).Build()
+	return infer.NewProviderBuilder().WithNamespace("premise").WithDisplayName("greeting").WithGoImportPath("example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting").WithComponents(infer.ComponentF(NewGreeting)).Build()
 }
 func main() {
 	v, err := provider()

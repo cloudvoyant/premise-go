@@ -1,4 +1,4 @@
-module example.com/premise-module
+module example.com/premise-module/libs/premise-pulumi-component-package
 
 go 1.25.0
 

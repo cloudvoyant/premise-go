@@ -12,7 +12,7 @@
     },
     "go": {
       "generateResourceContainerTypes": true,
-      "importBasePath": "example.com/premise-module/sdk/go/greeting",
+      "importBasePath": "example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting",
       "respectSchemaVersion": true
     },
     "nodejs": {

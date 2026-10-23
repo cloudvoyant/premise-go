@@ -1,3 +1,6 @@
+[env]
+GOWORK = "off"
+
 [tools]
 go = "1.25.14"
 buf = "1.47.2"
@@ -59,13 +62,13 @@ echo "No external environment configuration"
 [tasks."publish"]
 run = '''
 set -eu
-go test ./... && echo "Module tags are published by the coordinated premise release"
+go test ./... && echo "Packages share the workspace repository tag"
 '''
 
 [tasks."publish:rc"]
 run = '''
 set -eu
-go test ./... && echo "RC module tags are published by the coordinated premise release"
+go test ./... && echo "Packages share the workspace repository RC tag"
 '''
 
 [tasks."run"]

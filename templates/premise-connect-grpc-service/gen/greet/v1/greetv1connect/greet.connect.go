@@ -8,7 +8,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "example.com/premise-module/gen/greet/v1"
+	v1 "example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1"
 	http "net/http"
 	strings "strings"
 )
