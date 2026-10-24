@@ -2,7 +2,7 @@
 
 Generated projects are packages in the workspace's root Go module. Keep the shared workspace module path when generating more projects. Applications stay under apps/ and libraries under libs/, each with its own Mise tasks. All projects use the same repository release version and one root Git tag.
 
-The package.publication field in the workspace premise.yaml selects project publication tasks. private-local packages are still included in the shared module distribution. Use Go internal/ directories to restrict external imports.
+The package.public field in the workspace premise.yaml selects project publication tasks and defaults to true. Set it to false to skip those tasks. All packages remain in the shared module distribution. Use Go internal/ directories to restrict external imports.
 
 This optional template is a component provider with an executable and generated SDKs.
 The root Go package builds the provider executable.

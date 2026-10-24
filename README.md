@@ -6,4 +6,4 @@ Generated projects keep the standard apps/<name> and libs/<name> layout with per
 
 Generate with `pm generate cloudvoyant/premise-go:premise-go-lib`, or another selector in premise.yaml. Supply the same workspace Go module path for every project. During tandem development, use an explicit local registry source with the matching Premise branch.
 
-Run `mise run test` to validate every template contract and all generated projects together in one root module. API policy controls project publication tasks, not which source files the root module distributes. The optional cross-language template can be removed independently.
+Run `mise run test` to validate every template contract and all generated projects together in one root module. The package.public boolean controls project publication tasks and defaults to true. It does not exclude source from the root module. The optional cross-language template can be removed independently.

@@ -14,4 +14,4 @@ Pinned sources: [Go modules](https://go.dev/ref/mod), [Cobra](https://github.com
 
 The shared-module test checks one root go.mod and no go.work. Keep Pulumi pkg/v3 and sdk/v3 versions aligned across the native and provider templates. All projects share dependency versions in a generated workspace.
 
-Template package settings live in premise.yaml beside each template declaration. Premise applies questionnaire substitutions and records the settings in the generated workspace project. There are no Go sidecar files. Core generation tests cover public and private-local policies.
+Template package settings live in premise.yaml beside each template declaration. Premise applies questionnaire substitutions and records the settings in the generated workspace project. There are no Go sidecar files. Core generation tests cover true and false publication settings.
