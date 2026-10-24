@@ -5,6 +5,8 @@ config_roots = ["templates/premise-*", "apps/*", "libs/*"]
 
 [tools]
 go = "1.25.14"
+# Compatible shared-module CLI; PREMISE_BIN overrides it for tandem development.
+"go:github.com/cloudvoyant/premise" = "91557f718975d20c65ffffb1356bf47b73ddbe92"
 
 [tasks.test]
 run = "python3 scripts/validate.py && python3 scripts/validate-workspace.py"

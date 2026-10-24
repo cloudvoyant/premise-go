@@ -1,12 +1,11 @@
-"""Validate all generated projects under one Go module and dependency set."""
+"""Exercise real Premise generation for all templates in one root Go module."""
 
 from pathlib import Path
-import json
 import os
+import shutil
 import subprocess
 import tempfile
-
-from template_support import copy_template
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECTS = {
@@ -20,35 +19,44 @@ PROJECTS = {
 
 
 def main() -> None:
-    environment = dict(os.environ, GOWORK="off")
+    requested = os.environ.get("PREMISE_BIN")
+    if requested:
+        resolved = shutil.which(requested)
+        if resolved is None:
+            raise RuntimeError(f"PREMISE_BIN does not resolve to an executable: {requested}")
+    else:
+        configuration = tomllib.loads((ROOT / "mise.toml").read_text())
+        tool = "go:github.com/cloudvoyant/premise"
+        version = configuration["tools"][tool]
+        # Resolve the exact tool so another premise on PATH cannot shadow the pin.
+        resolved = subprocess.check_output(
+            ["mise", "which", "premise", "--tool", f"{tool}@{version}"],
+            cwd=ROOT,
+            text=True,
+        ).strip()
+    binary = str(Path(resolved).resolve())
+    environment = dict(os.environ, GOWORK="off", PREMISE_TEMPLATE_TEST="1", MISE_YES="1")
     with tempfile.TemporaryDirectory(prefix="premise-go-workspace-") as temporary:
         workspace = Path(temporary)
-        requirements = {}
-        checksums = set()
+        subprocess.run([binary, "init"], cwd=workspace, env=environment, check=True)
         for template, relative in PROJECTS.items():
-            project = workspace / relative
-            copy_template(ROOT / "templates" / template, project, "github.com/acme/example")
-            data = subprocess.check_output(["go", "mod", "edit", "-json"], cwd=project, env=environment, text=True)
-            manifest = json.loads(data)
-            for requirement in manifest.get("Require") or []:
-                requirements[requirement["Path"]] = requirement["Version"]
-            sums = project / "go.sum"
-            if sums.exists():
-                checksums.update(sums.read_text().splitlines())
-                sums.unlink()
-            (project / "go.mod").unlink()
-        (workspace / "go.mod").write_text("module github.com/acme/example\n\ngo 1.25.0\n")
-        for path, version in requirements.items():
-            subprocess.run(["go", "mod", "edit", f"-require={path}@{version}"], cwd=workspace, env=environment, check=True)
-        (workspace / "go.sum").write_text("\n".join(sorted(checksums)) + "\n")
-        subprocess.run(["go", "mod", "tidy"], cwd=workspace, env=environment, check=True)
-        for relative in PROJECTS.values():
-            print(f"Shared root module: {relative}", flush=True)
-            subprocess.run(["go", "test", "./" + relative + "/..."], cwd=workspace, env=environment, check=True)
-            subprocess.run(["go", "vet", "./" + relative + "/..."], cwd=workspace, env=environment, check=True)
+            name = Path(relative).name
+            answers = f"name={name},module=github.com/acme/example"
+            if relative.startswith("libs/"):
+                answers += ",package.public=true"
+            print(f"Generate {relative} with the actual CLI", flush=True)
+            subprocess.run(
+                [binary, "generate", f"{ROOT}:{template}", "--answer", answers],
+                cwd=workspace,
+                env=environment,
+                check=True,
+            )
+        subprocess.run(["go", "test", "./..."], cwd=workspace, env=environment, check=True)
+        subprocess.run(["go", "vet", "./..."], cwd=workspace, env=environment, check=True)
         assert list(workspace.rglob("go.mod")) == [workspace / "go.mod"]
         assert not (workspace / "go.work").exists()
-        print("All six projects pass with one root module and no go.work")
+        assert not list(workspace.rglob(".premise-stage-*"))
+        print("All six projects pass actual generation with one root module and no go.work")
 
 
 if __name__ == "__main__":
