@@ -27,7 +27,7 @@ def main() -> None:
         checksums = set()
         for template, relative in PROJECTS.items():
             project = workspace / relative
-            copy_template(ROOT / "templates" / template, project, "github.com/acme/example", "public")
+            copy_template(ROOT / "templates" / template, project, "github.com/acme/example")
             data = subprocess.check_output(["go", "mod", "edit", "-json"], cwd=project, env=environment, text=True)
             manifest = json.loads(data)
             for requirement in manifest.get("Require") or []:

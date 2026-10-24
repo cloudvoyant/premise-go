@@ -4,10 +4,9 @@ from pathlib import Path
 import shutil
 
 MODULE_PLACEHOLDER = "example.com/premise-module"
-PUBLICATION_PLACEHOLDER = "premise-publication"
 
 
-def copy_template(source: Path, destination: Path, module: str, publication: str) -> None:
+def copy_template(source: Path, destination: Path, module: str) -> None:
     """Copy a source template and apply the questionnaire substitutions."""
     shutil.copytree(
         source,
@@ -23,5 +22,4 @@ def copy_template(source: Path, destination: Path, module: str, publication: str
             continue
         text = text.replace(MODULE_PLACEHOLDER, module)
         text = text.replace(source.name, destination.name)
-        text = text.replace(PUBLICATION_PLACEHOLDER, publication)
         file.write_text(text)

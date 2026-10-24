@@ -11,6 +11,7 @@ template_registry:
     - name: premise-cobra-cli
       kind: app
       path: templates/premise-cobra-cli
+      package: {publication: "private-local", main: "."}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
@@ -20,6 +21,7 @@ template_registry:
     - name: premise-connect-grpc-service
       kind: app
       path: templates/premise-connect-grpc-service
+      package: {publication: "private-local", main: "."}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
@@ -29,6 +31,7 @@ template_registry:
     - name: premise-htmx-app
       kind: app
       path: templates/premise-htmx-app
+      package: {publication: "private-local", main: "."}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
@@ -38,6 +41,7 @@ template_registry:
     - name: premise-go-lib
       kind: lib
       path: templates/premise-go-lib
+      package: {publication: "premise-publication"}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
@@ -49,6 +53,7 @@ template_registry:
     - name: premise-pulumi-component-lib
       kind: lib
       path: templates/premise-pulumi-component-lib
+      package: {publication: "premise-publication"}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
@@ -60,6 +65,7 @@ template_registry:
     - name: premise-pulumi-component-package
       kind: lib
       path: templates/premise-pulumi-component-package
+      package: {publication: "premise-publication", main: ".", binary: "pulumi-resource-premise-pulumi-component-package"}
       questions:
         - {prompt: 'Project name:', type: string, populate: name}
         - {prompt: 'Workspace Go module path:', type: string, populate: module}
