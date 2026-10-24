@@ -9,7 +9,7 @@ node = "22.22.0"
 [tasks."install"]
 run = '''
 set -eu
-go mod download
+go mod download all
 '''
 
 [tasks."build"]

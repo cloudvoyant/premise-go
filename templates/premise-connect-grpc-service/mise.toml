@@ -8,7 +8,7 @@ buf = "1.47.2"
 [tasks."install"]
 run = '''
 set -eu
-go mod download
+go mod download all
 '''
 
 [tasks."build"]

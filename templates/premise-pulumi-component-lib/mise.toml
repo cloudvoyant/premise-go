@@ -7,7 +7,7 @@ go = "1.25.14"
 [tasks."install"]
 run = '''
 set -eu
-go mod download
+go mod download all
 '''
 
 [tasks."build"]
