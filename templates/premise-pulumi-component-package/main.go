@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
+	"log"
+
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/infer"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
-	"log"
 )
 
 // version is replaced by the coordinated release linker flag.

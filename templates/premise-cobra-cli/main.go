@@ -15,8 +15,9 @@ func command() *cobra.Command {
 	return &cobra.Command{
 		Use:     "premise-cobra-cli",
 		Version: version,
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Fprintln(cmd.OutOrStdout(), "Hello from premise-cobra-cli")
+		RunE: func(cmd *cobra.Command, args []string) error {
+			_, err := fmt.Fprintln(cmd.OutOrStdout(), "Hello from premise-cobra-cli")
+			return err
 		},
 	}
 }

@@ -1,16 +1,18 @@
 package main
 
 import (
-	"connectrpc.com/connect"
 	"context"
-	greetv1 "example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1"
-	"example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1/greetv1connect"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"connectrpc.com/connect"
+
+	greetv1 "example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1"
+	"example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1/greetv1connect"
 )
 
 // Private helpers ------------------------------------------------------------

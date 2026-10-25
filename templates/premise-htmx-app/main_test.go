@@ -15,8 +15,15 @@ func TestInteraction(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer r.Body.Close()
-	b, _ := io.ReadAll(r.Body)
+	defer func() {
+		if err := r.Body.Close(); err != nil {
+			t.Error(err)
+		}
+	}()
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if !strings.Contains(string(b), "&lt;script&gt;") {
 		t.Fatal(string(b))
 	}

@@ -1,0 +1,28 @@
+version: "2"
+
+run:
+  timeout: 5m
+  relative-path-mode: cfg
+
+linters:
+  default: standard
+  enable:
+    - bodyclose
+    - cyclop
+    - unconvert
+  settings:
+    cyclop:
+      max-complexity: 30
+  exclusions:
+    generated: strict
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - example.com/premise-module
+  exclusions:
+    generated: strict

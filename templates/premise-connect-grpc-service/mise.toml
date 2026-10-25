@@ -3,73 +3,41 @@ GOWORK = "off"
 
 [tools]
 go = "1.25.14"
+golangci-lint = "2.15.0"
 buf = "1.47.2"
 
 [tasks."install"]
-run = '''
-set -eu
-go mod download all
-'''
+run = "go mod download all"
 
 [tasks."build"]
-run = '''
-set -eu
-mkdir -p dist && go build -o dist/app .
-'''
+run = "go build -o dist/app ."
 
 [tasks."clean"]
-run = '''
-set -eu
-rm -rf dist
-'''
+run = "rm -rf dist"
 
 [tasks."test"]
-run = '''
-set -eu
-go test ./...
-'''
+run = "go test ./..."
 
 [tasks."lint"]
-run = '''
-set -eu
-go vet ./...
-'''
+run = "golangci-lint run"
 
 [tasks."lint:fix"]
-run = '''
-set -eu
-go fmt ./... && go vet ./...
-'''
+run = "golangci-lint run --fix"
 
 [tasks."format"]
-run = '''
-set -eu
-gofmt -w $(find . -name '*.go' -not -path './sdk/*')
-'''
+run = "golangci-lint fmt"
 
 [tasks."format:check"]
-run = '''
-set -eu
-test -z "$(gofmt -l $(find . -name '*.go' -not -path './sdk/*'))"
-'''
+run = "golangci-lint fmt --diff"
 
 [tasks."env-pull"]
-run = '''
-set -eu
-echo "No external environment configuration"
-'''
+run = "echo \"env-pull: nothing to pull\""
 
 [tasks."publish"]
-run = '''
-set -eu
-go test ./... && echo "Packages share the workspace repository tag"
-'''
+run = "go test ./..."
 
 [tasks."publish:rc"]
-run = '''
-set -eu
-go test ./... && echo "Packages share the workspace repository RC tag"
-'''
+run = "go test ./..."
 
 [tasks."run"]
 run = '''
@@ -84,10 +52,7 @@ if [ "${PREMISE_TEMPLATE_TEST:-}" = 1 ]; then go test ./...; else go run .; fi
 '''
 
 [tasks."deploy"]
-run = '''
-set -eu
-echo "Configure deployment for your environment; no cloud resources provisioned"
-'''
+run = "echo \"Configure deployment for your environment; no cloud resources provisioned\""
 
 [tasks."e2e"]
 run = '''

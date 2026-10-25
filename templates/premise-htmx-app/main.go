@@ -26,7 +26,9 @@ func handler() http.Handler {
 		}
 	})
 	mux.HandleFunc("POST /greet", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "<p>Hello, "+template.HTMLEscapeString(r.FormValue("name"))+"!</p>")
+		if _, err := fmt.Fprint(w, "<p>Hello, "+template.HTMLEscapeString(r.FormValue("name"))+"!</p>"); err != nil {
+			log.Print(err)
+		}
 	})
 	mux.Handle("GET /assets/", http.StripPrefix("/assets/", http.FileServer(http.FS(assets))))
 	return mux

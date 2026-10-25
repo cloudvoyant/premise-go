@@ -1,8 +1,9 @@
 package main
 
 import (
-	greeting "example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+
+	greeting "example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting"
 )
 
 // Private helpers ------------------------------------------------------------

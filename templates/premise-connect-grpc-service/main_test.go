@@ -1,12 +1,14 @@
 package main
 
 import (
-	"connectrpc.com/connect"
 	"context"
-	greetv1 "example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1"
-	"example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1/greetv1connect"
 	"net/http/httptest"
 	"testing"
+
+	"connectrpc.com/connect"
+
+	greetv1 "example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1"
+	"example.com/premise-module/apps/premise-connect-grpc-service/gen/greet/v1/greetv1connect"
 )
 
 // Public API -----------------------------------------------------------------

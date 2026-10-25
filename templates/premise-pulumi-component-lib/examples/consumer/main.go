@@ -1,8 +1,9 @@
 package main
 
 import (
-	component "example.com/premise-module/libs/premise-pulumi-component-lib"
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
+
+	component "example.com/premise-module/libs/premise-pulumi-component-lib"
 )
 
 // Private helpers ------------------------------------------------------------

@@ -1,10 +1,10 @@
 # Development
 
-Source templates have standalone dependency manifests so their contracts can run in isolation. Their module paths include the intended apps/ or libs/ project path. During generation, the Go provider merges dependencies and checksums into the root workspace manifests and removes the project manifests. Generated projects therefore contain packages, with no nested go.mod and no go.work.
+Source templates have standalone dependency manifests so their contracts can run in isolation. Their module paths include the intended apps/ or libs/ project path. During generation, the Go provider merges dependencies into the root workspace manifest and removes the project manifests. Native Go install tasks regenerate checksums. Generated projects therefore contain packages, with no nested go.mod and no go.work.
 
 The root mise.toml declares a monorepo and discovers tasks under templates/premise-*, apps/*, and libs/*. Run `mise tasks --all` to list tasks. Each template owns its tools and tasks. The registry root mise.toml is not copied into generated clients.
 
-Run `mise run test` at the registry root. It runs isolated template contracts and combines all six projects into a shared module for Go tests and vet. Run one source template directly with `mise run //templates/premise-cobra-cli:test`.
+Run `mise run test` at the registry root for the common Premise template contract. Run `mise run e2e` for the Go integration suite. It generates all six projects into a shared module, preserves client quality rules, and rejects formatting and complexity violations. Run one source template directly with `mise run //templates/premise-cobra-cli:test`.
 
 Connect code is checked in. Run `mise run generate` in that template to regenerate with pinned local protobuf and Connect plugins. Repeat generation and compare gen/ to verify reproducibility.
 
@@ -15,3 +15,7 @@ Pinned sources: [Go modules](https://go.dev/ref/mod), [Cobra](https://github.com
 The shared-module test checks one root go.mod and no go.work. Keep Pulumi pkg/v3 and sdk/v3 versions aligned across the native and provider templates. All projects share dependency versions in a generated workspace.
 
 Template package settings live in premise.yaml beside each template declaration. Premise applies questionnaire substitutions and records the settings in the generated workspace project. There are no Go sidecar files. Core generation tests cover true and false publication settings.
+
+The registry uses the standard Premise commit and merge workflows. Root Mise tasks own registry checks, and each template supplies the same contract tasks as Cargo and Bun. The separate Python test runner is removed.
+
+Workspace quality rules live in `.golangci.yml` and `.editorconfig`. The registry declares them in `workspace_init_files`, so generation copies missing files without replacing existing client configuration. Linters include error handling, static analysis, HTTP response cleanup, and cyclomatic complexity. Formatting uses gofmt and goimports. Clients can edit their root rules after the first project.

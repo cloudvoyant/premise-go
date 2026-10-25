@@ -1,8 +1,9 @@
 package greeting_test
 
 import (
-	greeting "example.com/premise-module/libs/premise-go-lib"
 	"fmt"
+
+	greeting "example.com/premise-module/libs/premise-go-lib"
 )
 
 // Public API -----------------------------------------------------------------

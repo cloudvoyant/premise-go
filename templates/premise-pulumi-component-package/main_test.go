@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"testing"
+
 	"github.com/blang/semver"
 	p "github.com/pulumi/pulumi-go-provider"
 	"github.com/pulumi/pulumi-go-provider/integration"
-	"testing"
 )
 
 // Public API -----------------------------------------------------------------
