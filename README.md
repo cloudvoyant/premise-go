@@ -1,13 +1,56 @@
 # premise-go
 
-Go templates for Premise: Cobra CLI, Connect/gRPC service, HTMX app, Go libraries, native Go Pulumi components, and an optional cross-language Pulumi provider.
+A Go template registry for [Premise](https://github.com/cloudvoyant/premise). Generate applications and libraries under `apps/<name>` and `libs/<name>` with shared dependencies and one repository version.
 
-Generated projects keep the standard apps/<name> and libs/<name> layout with per-project Mise tasks. They share one root go.mod, go.sum, dependency set, and repository release tag. There is no go.work or per-library module tag. External clients can import an individual library package at the shared module version.
+## Templates
 
-Generate with `pm generate cloudvoyant/premise-go:premise-go-lib`, or another selector in premise.yaml. Supply the same workspace Go module path for every project. During tandem development, use an explicit local registry source with the matching Premise branch.
+| Template                           | Kind | Description                                               |
+| ---------------------------------- | ---- | --------------------------------------------------------- |
+| `premise-cobra-cli`                | app  | Cobra command-line application.                           |
+| `premise-connect-grpc-service`     | app  | HTTP service for Connect, gRPC, and gRPC-Web.             |
+| `premise-htmx-app`                 | app  | Web application with embedded HTML templates and htmx.    |
+| `premise-go-lib`                   | lib  | Go library for external or internal use.                  |
+| `premise-pulumi-component-lib`     | lib  | Go Pulumi components with a Go consumer and mock tests.   |
+| `premise-pulumi-component-package` | lib  | Optional Pulumi provider with generated Go and Node SDKs. |
 
-Run `mise install`, then `mise run test` for the same `premise template test` contract used by the other registries. Run `mise run e2e` for real generation of all six templates and shared-module tests. Set `PREMISE_BIN=/absolute/path/to/premise` to test a local core build. Mise selects the exact pinned CLI by default. The optional Pulumi provider also runs its Node consumer through the ordinary `test` task.
+Generated projects share one root `go.mod`, `go.sum`, dependency set, and release tag. Each project has its own Mise tasks. External clients can import one library package at the shared module version. Generated projects do not need `go.work` or separate library tags.
 
-The first generated Go project copies `.golangci.yml` and `.editorconfig` to the workspace root when those files are missing. Later projects keep the client rules. All templates use those shared rules for formatting, imports, static analysis, error handling, and a cyclomatic complexity limit of 30. The standard Premise commit and merge workflows run the registry tasks and template contracts.
+Shared files live at the repository root, as they do in the Bun and Cargo registries. `workspace_init_files` declares `.editorconfig` and `.golangci.yml` as initial client defaults. Generation copies missing files, preserves existing client rules, and continues to merge dependencies on later additions.
 
-The `package.public` boolean controls project publication tasks and defaults to true. It does not exclude source from the shared root module. The optional template that generates bindings for other languages can be removed independently.
+## Requirements
+
+- Premise `v0.6.0` or later on `PATH` as `pm`.
+- [Mise](https://mise.jdx.dev/) to install the declared toolchains.
+- Network access to download Go dependencies and the optional Pulumi SDK tools.
+
+## Generate a Project
+
+```bash
+pm generate cloudvoyant/premise-go
+```
+
+Select a template and enter a project name and workspace module path. Use the same module path for every Go project in that workspace. To select a template directly:
+
+```bash
+pm generate cloudvoyant/premise-go:premise-go-lib
+```
+
+Choose `premise-pulumi-component-lib` for components consumed by other Go Pulumi projects. Choose the optional `premise-pulumi-component-package` only when you need generated SDKs for other languages.
+
+Libraries ask whether to run publication tasks. `package.public: false` skips those tasks, but the source remains part of the shared module. Use Go `internal/` directories to restrict external imports.
+
+## Development
+
+The registry pins the released Premise CLI `v0.6.0` through Mise. CI uses the maintained `cloudvoyant/premise@v0` action tag. See the [development guide](docs/development-guide.md) for installation, validation, workspace rules, and publication.
+
+```bash
+mise install
+mise run test
+mise run e2e
+```
+
+The root test uses the same `premise template test` contract as Bun and Cargo. The Go integration suite also generates all six templates into one workspace and tests the shared module and quality rules.
+
+## License
+
+[MIT](LICENSE)

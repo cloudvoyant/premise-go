@@ -1,7 +1,31 @@
 # premise-go-lib
 
-Generated projects are packages in the workspace's root Go module. Keep the shared workspace module path when generating more projects. Applications stay under apps/ and libraries under libs/, each with its own Mise tasks. All projects use the same repository release version and one root Git tag.
+A Go library that exports `greeting.Hello` with tests.
 
-The package.public field in the workspace premise.yaml selects project publication tasks and defaults to true. Set it to false to skip those tasks. All packages remain in the shared module distribution. Use Go internal/ directories to restrict external imports.
+## Use
 
-Run `mise run install`, `mise run test`, and `mise run build`. The workspace's root `go.mod` resolves dependencies and local package imports. External consumers run `go get example.com/premise-module/libs/premise-go-lib@v1.2.3`. Verify public packages with `GOWORK=off go test ./...` before release. Do not publish filesystem replace directives.
+From another Go project, fetch a released package:
+
+```bash
+go get example.com/premise-module/libs/premise-go-lib@v1.2.3
+```
+
+Import `example.com/premise-module/libs/premise-go-lib` and call `greeting.Hello("Premise")`. Projects in the same workspace use the same import path without a separate release.
+
+## Develop
+
+```bash
+mise run install
+mise run format:check
+mise run lint
+mise run test
+mise run build
+```
+
+Formatting and lint tasks use the workspace's root `.golangci.yml`.
+
+## Workspace
+
+This project is a package in the workspace's root Go module. Keep the same module path when you add projects. Applications live under `apps/`, and libraries live under `libs/`. All packages share dependencies and one repository tag.
+
+`package.public: false` skips project publication tasks. It does not remove source from the module. Use Go `internal/` directories to restrict external imports. Before release, run `GOWORK=off go test ./...` from the workspace root and remove filesystem `replace` directives.

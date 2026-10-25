@@ -1,9 +1,31 @@
 # premise-htmx-app
 
-Generated projects are packages in the workspace's root Go module. Keep the shared workspace module path when generating more projects. Applications stay under apps/ and libraries under libs/, each with its own Mise tasks. All projects use the same repository release version and one root Git tag.
+A Go web application with embedded HTML templates and htmx.
 
-The package.public field in the workspace premise.yaml selects project publication tasks and defaults to true. Set it to false to skip those tasks. All packages remain in the shared module distribution. Use Go internal/ directories to restrict external imports.
+## Run
 
-Run `mise run install`, `mise run test`, and `mise run build`. The workspace's root `go.mod` resolves dependencies and local package imports. Install a released application with `go install example.com/premise-module/apps/premise-htmx-app@v1.2.3`. Verify public packages with `GOWORK=off go test ./...` before release. Do not publish filesystem replace directives.
+```bash
+mise run run
+```
 
-`ADDR` selects the HTTP bind address (default `:8080`). Templates and htmx 2.0.8 are embedded in the binary, so deployment needs only the executable. SIGINT starts graceful shutdown. `POST /greet` returns an HTML fragment with escaped input. The vendored htmx script is distributed under its upstream 0BSD license.
+Open `http://localhost:8080`. `ADDR` changes the bind address. `POST /greet` returns an HTML fragment with escaped input. SIGINT starts graceful shutdown.
+
+The executable embeds its HTML templates and htmx script. Deployment needs only the binary. The vendored htmx script uses its upstream 0BSD license.
+
+## Develop
+
+```bash
+mise run install
+mise run format:check
+mise run lint
+mise run test
+mise run build
+```
+
+Formatting and lint tasks use the workspace's root `.golangci.yml`.
+
+## Workspace
+
+This project is a package in the workspace's root Go module. Keep the same module path when you add projects. Applications live under `apps/`, and libraries live under `libs/`. All packages share dependencies and one repository tag.
+
+`package.public: false` skips project publication tasks. It does not remove source from the module. Use Go `internal/` directories to restrict external imports. Before release, run `GOWORK=off go test ./...` from the workspace root and remove filesystem `replace` directives.

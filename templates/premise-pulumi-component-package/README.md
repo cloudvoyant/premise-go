@@ -1,38 +1,49 @@
 # premise-pulumi-component-package
 
-Generated projects are packages in the workspace's root Go module. Keep the shared workspace module path when generating more projects. Applications stay under apps/ and libraries under libs/, each with its own Mise tasks. All projects use the same repository release version and one root Git tag.
+An optional Pulumi component provider with an executable and generated Go and Node SDKs. Use `premise-pulumi-component-lib` when consumers only need native Go components.
 
-The package.public field in the workspace premise.yaml selects project publication tasks and defaults to true. Set it to false to skip those tasks. All packages remain in the shared module distribution. Use Go internal/ directories to restrict external imports.
+## Use
 
-This optional template is a component provider with an executable and generated SDKs.
-The root Go package builds the provider executable.
-Go consumers import `example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting`, the generated SDK package within the same module.
+From a separate Go Pulumi project, fetch the SDK package:
 
-In the provider project, install dependencies, run tests, and build the executable:
+```bash
+go get example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting@v1.2.3
+```
 
-```sh
+Import `example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting`. The SDK belongs to the shared workspace module and uses its repository tag.
+
+## Develop
+
+```bash
 mise run install
+mise run format:check
+mise run lint
 mise run test
 mise run build
 ```
 
-In a separate Go Pulumi project, fetch the published SDK package:
+Formatting and lint tasks use the workspace's root `.golangci.yml`.
 
-```sh
-go get example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting@v1.2.3
+## Generate SDKs
+
+Run `mise run generate` to build the provider, extract its schema, and regenerate the pinned Go and Node SDKs. Run `mise run test:sdk` for the Node consumer with Pulumi mocks. The normal test task also includes that consumer. Go tests cover the Go SDK consumer. Neither consumer deploys cloud resources.
+
+Before a shared release, regenerate the provider and SDKs at the shared version:
+
+```bash
+RELEASE_VERSION=1.2.3 mise run generate
 ```
 
-The workspace's root `go.mod` resolves local package imports during development.
-Verify public packages with `GOWORK=off go test ./...` before release.
-Do not publish filesystem replace directives.
+A leading `v` is accepted. Commit the regenerated source and lockfile before release. Generation without `RELEASE_VERSION` restores development artifacts at `0.1.0`.
 
-Run `mise run generate` to build the provider, extract its schema, and regenerate pinned Go and Node SDKs.
-Run `mise run test:sdk` for a local Node SDK consumer with Pulumi mocks.
-The Go tests also check the generated Go SDK consumer.
-Neither demonstration deploys cloud resources.
+## Distribution
 
-The provider uses development version `0.1.0`, replaced through `-X main.version=<shared-version>` when building a release, and fixed token (`premise-pulumi-component-package:index:Greeting`). Before distributing binary plugins or Node packages, configure your own namespace, plugin download URL, SDK package name, package feeds, and release automation. The Go SDK uses the shared repository tag; npm/plugin distribution remains an explicit separate packaging step. This exploratory template can be removed before merge without changing the native Go component library.
+The provider executable uses development version `0.1.0`. A release build replaces it through `-X main.version=<shared-version>`. Its resource token is `premise-pulumi-component-package:index:Greeting`.
 
-Generated Go SDK packages live inside the shared workspace module; there is no nested go.mod or SDK-specific tag requirement. The package.main and package.binary fields in premise.yaml let the coordinated release package the provider executable alongside the published module. Node package/plugin publication is intentionally a separate opt-in step.
+Before distributing binary plugins or Node packages, configure the namespace, plugin download URL, SDK package name, package feeds, and release tasks. Node and plugin distribution remain separate from the Go module tag. `package.main` and `package.binary` in `premise.yaml` let the coordinated release include the provider executable.
 
-Before freezing a shared release commit, run `RELEASE_VERSION=1.2.3 mise run generate` (a leading `v` is accepted). This builds the provider at the shared version and regenerates the schema and both SDKs with matching versions, including SDK plugin metadata. Commit the regenerated source and lockfile before the shared repository release. `mise run generate` without RELEASE_VERSION restores development artifacts at `0.1.0`. No independent package version is calculated.
+## Workspace
+
+This project is a package in the workspace's root Go module. Keep the same module path when you add projects. Applications live under `apps/`, and libraries live under `libs/`. All packages share dependencies and one repository tag.
+
+`package.public: false` skips project publication tasks. It does not remove source from the module. Use Go `internal/` directories to restrict external imports. Before release, run `GOWORK=off go test ./...` from the workspace root and remove filesystem `replace` directives.
