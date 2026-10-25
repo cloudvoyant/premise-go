@@ -9,7 +9,7 @@ config_roots = ["templates/premise-*", "apps/*", "libs/*"]
 [tools]
 go = "1.25.14"
 golangci-lint = "2.15.0"
-"go:github.com/cloudvoyant/premise" = "e7f9c6d42da6f1da60e0e57d8aedeff01cdecfd5"
+"go:github.com/cloudvoyant/premise" = "d24463ae3f53f00494096a7a453cd53097ec3025"
 actionlint = "1.7.12"
 
 [tasks.template-test]

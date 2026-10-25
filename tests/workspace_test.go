@@ -158,14 +158,14 @@ func TestScaffoldWorkflows(t *testing.T) {
 		runCommand(t, root, binary, "generate", registry+":premise-go-lib", "--answer", "name=example,module=github.com/zexample/workspace,package.public=false")
 
 		// Assert
-		t.Run("it uses the same released action as the registry", func(t *testing.T) {
+		t.Run("it uses the stable major action reference", func(t *testing.T) {
 			actionPattern := regexp.MustCompile(`cloudvoyant/premise@v[^\s]+`)
 			for _, workflow := range []string{"on-commit.yml", "on-merge.yml"} {
 				registryWorkflow, err := os.ReadFile(filepath.Join(registry, ".github", "workflows", workflow))
 				if err != nil {
 					t.Fatal(err)
 				}
-				expected := actionPattern.Find(registryWorkflow)
+				expected := regexp.MustCompile(`cloudvoyant/premise@v[0-9]+`).Find(registryWorkflow)
 				clientWorkflow, err := os.ReadFile(filepath.Join(root, ".github", "workflows", workflow))
 				if err != nil {
 					t.Fatal(err)
