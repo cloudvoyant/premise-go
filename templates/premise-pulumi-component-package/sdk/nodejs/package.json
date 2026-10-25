@@ -1,0 +1,19 @@
+{
+  "name": "@premise/premise-pulumi-component-package",
+  "version": "0.1.0",
+  "scripts": {
+    "build": "tsc && cp package.json bin/package.json"
+  },
+  "dependencies": {
+    "@pulumi/pulumi": "3.200.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "typescript": "5.7.3"
+  },
+  "pulumi": {
+    "resource": true,
+    "name": "premise-pulumi-component-package",
+    "version": "0.1.0"
+  }
+}

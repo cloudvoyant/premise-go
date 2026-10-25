@@ -1,0 +1,54 @@
+{
+  "name": "premise-pulumi-component-package",
+  "displayName": "greeting",
+  "version": "0.1.0",
+  "namespace": "premise",
+  "meta": {
+    "moduleFormat": "(.*)"
+  },
+  "language": {
+    "csharp": {
+      "respectSchemaVersion": true
+    },
+    "go": {
+      "generateResourceContainerTypes": true,
+      "importBasePath": "example.com/premise-module/libs/premise-pulumi-component-package/sdk/go/greeting",
+      "respectSchemaVersion": true
+    },
+    "nodejs": {
+      "respectSchemaVersion": true
+    },
+    "python": {
+      "pyproject": {
+        "enabled": true
+      },
+      "respectSchemaVersion": true
+    }
+  },
+  "config": {},
+  "provider": {
+    "type": "object"
+  },
+  "resources": {
+    "premise-pulumi-component-package:index:Greeting": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "required": [
+        "message"
+      ],
+      "inputProperties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "requiredInputs": [
+        "name"
+      ],
+      "isComponent": true
+    }
+  }
+}

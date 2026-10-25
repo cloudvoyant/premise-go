@@ -1,0 +1,70 @@
+[env]
+GOWORK = "off"
+
+[tools]
+go = "1.25.14"
+golangci-lint = "2.15.0"
+buf = "1.47.2"
+
+[tasks."install"]
+run = "go mod download all"
+
+[tasks."build"]
+run = "go build -o dist/app ."
+
+[tasks."clean"]
+run = "rm -rf dist"
+
+[tasks."test"]
+run = "go test ./..."
+
+[tasks."lint"]
+run = "golangci-lint run"
+
+[tasks."lint:fix"]
+run = "golangci-lint run --fix"
+
+[tasks."format"]
+run = "golangci-lint fmt"
+
+[tasks."format:check"]
+run = "golangci-lint fmt --diff"
+
+[tasks."env-pull"]
+run = "echo \"env-pull: nothing to pull\""
+
+[tasks."publish"]
+run = "go test ./..."
+
+[tasks."publish:rc"]
+run = "go test ./..."
+
+[tasks."run"]
+run = '''
+set -eu
+if [ "${PREMISE_TEMPLATE_TEST:-}" = 1 ]; then go test ./...; else go run .; fi
+'''
+
+[tasks."dev"]
+run = '''
+set -eu
+if [ "${PREMISE_TEMPLATE_TEST:-}" = 1 ]; then go test ./...; else go run .; fi
+'''
+
+[tasks."deploy"]
+run = "echo \"Configure deployment for your environment; no cloud resources provisioned\""
+
+[tasks."e2e"]
+run = '''
+set -eu
+go test ./... -run "Test"
+'''
+
+[tasks.generate]
+run = """
+set -eu
+mkdir -p .tools
+GOBIN="$PWD/.tools" go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
+GOBIN="$PWD/.tools" go install connectrpc.com/connect/cmd/protoc-gen-connect-go@v1.21.0
+PATH="$PWD/.tools:$PATH" buf generate
+"""

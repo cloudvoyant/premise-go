@@ -1,0 +1,77 @@
+monorepo_root = true
+
+[env]
+PREMISE_BIN = { value = "{{ env.PREMISE_BIN | default(value=tools['go:github.com/cloudvoyant/premise'].path ~ '/bin/premise') }}", tools = true }
+
+[monorepo]
+config_roots = ["templates/premise-*", "apps/*", "libs/*"]
+
+[tools]
+go = "1.25.14"
+golangci-lint = "2.15.0"
+"go:github.com/cloudvoyant/premise" = "v0.6.0"
+actionlint = "1.7.12"
+
+[tasks.template-test]
+description = "Run every declared template through the Premise contract"
+run = '"{{ env.PREMISE_BIN }}" template test'
+
+[tasks.test]
+description = "Run every declared template through the common contract"
+run = "mise run template-test"
+
+[tasks.e2e]
+description = "Test generation and shared workspace rules"
+dir = "tests"
+run = "go test -v ./..."
+
+[tasks.build]
+description = "Validate registry configuration"
+run = '"{{ env.PREMISE_BIN }}" template ls'
+
+[tasks.format]
+description = "Format Go sources and Mise configuration"
+run = [
+  "mise fmt",
+  "golangci-lint fmt tests",
+  "mise run --jobs 1 //templates/...:format",
+]
+
+[tasks."format:check"]
+description = "Check Go sources and Mise configuration"
+run = [
+  "mise fmt --check",
+  "golangci-lint fmt --diff tests",
+  "mise run --jobs 1 //templates/...:format:check",
+]
+
+[tasks.lint]
+description = "Validate workflows and template code"
+run = [
+  "actionlint",
+  "mise run lint:e2e",
+  "mise run --jobs 1 //templates/...:lint",
+]
+
+[tasks."lint:e2e"]
+description = "Lint the Go integration suite with the shared rules"
+dir = "tests"
+run = "golangci-lint run"
+
+[tasks."on-commit"]
+description = "Run registry checks before template contracts"
+run = [
+  "mise run build",
+  "mise run format:check",
+  "mise run lint",
+  "mise run e2e",
+]
+
+[tasks."on-merge"]
+description = "Run registry checks before template contracts"
+run = [
+  "mise run build",
+  "mise run format:check",
+  "mise run lint",
+  "mise run e2e",
+]

@@ -1,0 +1,6 @@
+dist/
+.pulumi/
+node_modules/
+__pycache__/
+.tools/
+bin/

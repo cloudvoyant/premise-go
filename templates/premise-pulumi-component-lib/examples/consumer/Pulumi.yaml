@@ -1,0 +1,3 @@
+name: component-consumer
+runtime: go
+description: Native Go component consumer; no cloud credentials needed.
