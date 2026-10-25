@@ -37,16 +37,16 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
           persist-credentials: false
-      - uses: cloudvoyant/premise@v0.5.0
+      - uses: cloudvoyant/premise@v0.6.0-rc.306
         id: plan
         with:
           command: plan
           flow: on-commit
           release: auto
-          install-premise: skip
+          install-premise: build
       - name: Run the root hook once before matrix rows
         if: steps.plan.outputs.mode == 'matrix'
-        uses: cloudvoyant/premise@v0.5.0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           command: flow
           flow: on-commit
@@ -67,12 +67,12 @@ jobs:
           fetch-tags: true
           persist-credentials: false
       - name: Run complete flow
-        uses: cloudvoyant/premise@v0.5.0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           command: flow
           flow: on-commit
           release: none
-          install-premise: skip
+          install-premise: build
           channel: rc
           version: ${{ needs.plan.outputs.version }}
           output-dir: ${{ runner.temp }}/premise-files
@@ -99,12 +99,12 @@ jobs:
           fetch-tags: true
           persist-credentials: false
       - name: Run scoped complete flow
-        uses: cloudvoyant/premise@v0.5.0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           command: flow-matrix
           flow: on-commit
           release: none
-          install-premise: skip
+          install-premise: build
           project: ${{ matrix.project }}
           platform: ${{ matrix.platform }}
           skip-root: true
@@ -161,14 +161,14 @@ jobs:
             exit 1
           fi
       - name: Publish combined release
-        uses: cloudvoyant/premise@v0.5.0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         env:
           GH_TOKEN: ${{ github.token }}
         with:
           command: release
           flow: on-commit
           release: none
-          install-premise: skip
+          install-premise: build
           channel: rc
           version: ${{ needs.plan.outputs.version }}
           files-dir: ${{ needs.plan.outputs.native == 'true' && format('{0}/premise-files', runner.temp) || '' }}
@@ -187,7 +187,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Publish registry packages
-        uses: cloudvoyant/premise@v0.5.0
+        uses: cloudvoyant/premise@v0.6.0-rc.306
         env:
           GH_TOKEN: ${{ github.token }}
           CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
           command: packages
           flow: on-commit
           release: none
-          install-premise: skip
+          install-premise: build
           channel: rc
           version: ${{ needs.publish-release.outputs.version }}
 
@@ -215,10 +215,11 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: cloudvoyant/premise@v0.5.0
+      - uses: cloudvoyant/premise@v0.6.0-rc.306
         with:
           setup-only: true
-          install-premise: skip
+          premise-version: v0.6.0-rc.306
+          install-premise: pre-built
       - name: Authenticate infrastructure providers
         run: mise exec -- pm infra auth --ci --env-file "$GITHUB_ENV"
       - name: Inspect environment

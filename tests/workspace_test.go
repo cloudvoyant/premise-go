@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -143,6 +144,41 @@ func TestScaffold(t *testing.T) {
 		t.Run("it rejects functions over the shared complexity limit", func(t *testing.T) {
 			if complexityError == nil || !strings.Contains(string(output), "cyclop") {
 				t.Fatalf("expected complexity failure, got %v:\n%s", complexityError, output)
+			}
+		})
+	})
+}
+
+func TestScaffoldWorkflows(t *testing.T) {
+	t.Run("when a Go library creates client workflows", func(t *testing.T) {
+		// Arrange
+		root, registry, binary := workspaceFixture(t)
+
+		// Act
+		runCommand(t, root, binary, "generate", registry+":premise-go-lib", "--answer", "name=example,module=github.com/zexample/workspace,package.public=false")
+
+		// Assert
+		t.Run("it uses the same released action as the registry", func(t *testing.T) {
+			actionPattern := regexp.MustCompile(`cloudvoyant/premise@v[^\s]+`)
+			for _, workflow := range []string{"on-commit.yml", "on-merge.yml"} {
+				registryWorkflow, err := os.ReadFile(filepath.Join(registry, ".github", "workflows", workflow))
+				if err != nil {
+					t.Fatal(err)
+				}
+				expected := actionPattern.Find(registryWorkflow)
+				clientWorkflow, err := os.ReadFile(filepath.Join(root, ".github", "workflows", workflow))
+				if err != nil {
+					t.Fatal(err)
+				}
+				actions := actionPattern.FindAll(clientWorkflow, -1)
+				if len(expected) == 0 || len(actions) == 0 {
+					t.Fatalf("missing released action in %s", workflow)
+				}
+				for _, action := range actions {
+					if !bytes.Equal(action, expected) {
+						t.Fatalf("%s uses %s, registry uses %s", workflow, action, expected)
+					}
+				}
 			}
 		})
 	})

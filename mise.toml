@@ -2,7 +2,6 @@ monorepo_root = true
 
 [env]
 PREMISE_BIN = { value = "{{ env.PREMISE_BIN | default(value=tools['go:github.com/cloudvoyant/premise'].path ~ '/bin/premise') }}", tools = true }
-_.path = { path = "{{ tools['go:github.com/cloudvoyant/premise'].path }}/bin", tools = true }
 
 [monorepo]
 config_roots = ["templates/premise-*", "apps/*", "libs/*"]
@@ -10,7 +9,7 @@ config_roots = ["templates/premise-*", "apps/*", "libs/*"]
 [tools]
 go = "1.25.14"
 golangci-lint = "2.15.0"
-"go:github.com/cloudvoyant/premise" = { version = "6aace3c0cc706717e451a4e5d1902a6b24212603", postinstall = 'ln -sf premise "${MISE_TOOL_INSTALL_PATH:?}/bin/pm"' }
+"go:github.com/cloudvoyant/premise" = "e7f9c6d42da6f1da60e0e57d8aedeff01cdecfd5"
 actionlint = "1.7.12"
 
 [tasks.template-test]
